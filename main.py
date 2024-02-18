@@ -14,6 +14,10 @@ IMDB_CACHE = Cache("cache/imdb")
 
 DOUBAN_COLLECTION_API_PREFIX = "https://m.douban.com/rexxar/api/v2/subject_collection"
 
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+
 
 def get_http_client():
     client = httpx.AsyncClient()
@@ -45,6 +49,7 @@ async def get_collection_items(client: httpx.AsyncClient, collection_id: str):
     if items is not None:
         return items
 
+    logging.info(f"Fetching collection items for {collection_id}...")
     collection_info = await get_json(
         client, f"{DOUBAN_COLLECTION_API_PREFIX}/{collection_id}"
     )
@@ -59,6 +64,8 @@ async def get_collection_items(client: httpx.AsyncClient, collection_id: str):
         )
         items.extend(response["subject_collection_items"])
         start += count
+        await asyncio.sleep(random.uniform(0.0, 0.1))
+    logging.info(f"Fetched {len(items)} items for {collection_id}.")
 
     cache.set(collection_id, items, expire=3600)
     return items
@@ -82,7 +89,7 @@ async def collection(collection_id: str):
 
 
 async def convert_item(client: httpx.AsyncClient, item):
-    imdb_id = await get_imdb_id_from_douban_id(client, item["id"])
+    imdb_id = await get_imdb_id_from_douban_id(client, item["title"], item["id"])
     return {
         "douban_id": item["id"],
         "douban_url": item["url"],
@@ -96,7 +103,9 @@ async def convert_item(client: httpx.AsyncClient, item):
 IMDB_ID_PATTERN = re.compile(r"IMDb:.*?(\btt\d+\b)")
 
 
-async def get_imdb_id_from_douban_id(client: httpx.AsyncClient, douban_id: str):
+async def get_imdb_id_from_douban_id(
+    client: httpx.AsyncClient, title: str, douban_id: str
+):
     cache = IMDB_CACHE
     imdb_id = cache.get(douban_id)
     if imdb_id is not None:
@@ -104,6 +113,7 @@ async def get_imdb_id_from_douban_id(client: httpx.AsyncClient, douban_id: str):
 
     await asyncio.sleep(random.uniform(0.0, 1.0))
 
+    logging.info(f"Fetching IMDb ID for {title} (douban ID: {douban_id})...")
     response = await get_response(
         client, f"https://movie.douban.com/subject/{douban_id}/"
     )
@@ -111,6 +121,7 @@ async def get_imdb_id_from_douban_id(client: httpx.AsyncClient, douban_id: str):
     if not match:
         raise ValueError(f"IMDb ID not found for douban ID: {douban_id}")
     imdb_id = match.group(1)
+    logging.info(f"IMDb ID for {title} (douban ID: {douban_id}) is {imdb_id}.")
 
     cache.set(douban_id, imdb_id)
     return imdb_id
