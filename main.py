@@ -2,7 +2,9 @@ import asyncio
 import logging
 import random
 import re
+import traceback
 from fastapi import FastAPI
+import fastapi
 import httpx
 from diskcache import Cache
 
@@ -63,6 +65,12 @@ async def get_collection_items(client: httpx.AsyncClient, collection_id: str):
 
 
 app = FastAPI()
+
+
+@app.exception_handler(500)
+async def internal_exception_handler(request: fastapi.Request, exc: Exception):
+    content = "".join(traceback.format_exception(exc))
+    return fastapi.responses.PlainTextResponse(status_code=500, content=content)
 
 
 @app.get("/collection/{collection_id}")
