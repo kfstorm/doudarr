@@ -6,7 +6,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY main.py .
 
-VOLUME "/app/.cache"
+VOLUME "/app/cache"
 
 EXPOSE 8000
 

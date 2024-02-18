@@ -9,8 +9,8 @@ import httpx
 from diskcache import Cache
 
 
-COLLECTION_CACHE = Cache(".cache/collection")
-IMDB_CACHE = Cache(".cache/imdb")
+COLLECTION_CACHE = Cache("cache/collection")
+IMDB_CACHE = Cache("cache/imdb")
 
 DOUBAN_COLLECTION_API_PREFIX = "https://m.douban.com/rexxar/api/v2/subject_collection"
 
