@@ -32,16 +32,17 @@ class CollectionApi:
             return items
 
         logging.info(f"Fetching collection items for {collection_id} ...")
-        collection_info = await self.get_collection_info(collection_id)
-        total = collection_info["total"]
+        total = None
         items = []
         start = 0
         count = 50
-        while start < total:
+        while total is None or start < total:
             response = await get_json(
                 self.client,
                 f"/{collection_id}/items?start={start}&count={count}",
             )
+            if total is None:
+                total = response["total"]
             items.extend(response["subject_collection_items"])
             start += count
             await asyncio.sleep(
