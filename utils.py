@@ -1,5 +1,6 @@
 import httpx
 import logging
+from config import app_config
 
 
 async def get_response(client: httpx.AsyncClient, url: str):
@@ -15,3 +16,15 @@ async def get_response(client: httpx.AsyncClient, url: str):
 async def get_json(client: httpx.AsyncClient, url: str):
     response = await get_response(client, url)
     return response.json()
+
+
+def get_http_client_args():
+    if app_config.proxy_address:
+        return {
+            "proxies": {
+                "http://": app_config.proxy_address,
+                "https://": app_config.proxy_address,
+            },
+        }
+    else:
+        return {}

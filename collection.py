@@ -3,7 +3,7 @@ import logging
 import os
 import random
 import httpx
-from utils import get_json
+from utils import get_http_client_args, get_json
 from diskcache import Cache
 from config import app_config
 
@@ -11,7 +11,8 @@ from config import app_config
 class CollectionApi:
     def __init__(self):
         self.client = httpx.AsyncClient(
-            base_url="https://m.douban.com/rexxar/api/v2/subject_collection"
+            **get_http_client_args(),
+            base_url="https://m.douban.com/rexxar/api/v2/subject_collection",
         )
         del self.client.headers["user-agent"]
         self.client.headers["Referer"] = "https://m.douban.com/subject_collection"

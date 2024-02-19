@@ -4,7 +4,7 @@ from fastapi import FastAPI
 import fastapi
 
 from collection import CollectionApi
-from imdb import DoubanHtmlImdbApi
+from imdb import get_imdb_api
 
 
 logging.basicConfig(
@@ -13,7 +13,7 @@ logging.basicConfig(
 
 app = FastAPI()
 collection_api = CollectionApi()
-imdb_api = DoubanHtmlImdbApi()
+imdb_api = get_imdb_api()
 
 
 @app.exception_handler(500)
@@ -25,7 +25,11 @@ async def internal_exception_handler(request: fastapi.Request, exc: Exception):
 @app.get("/collection/{collection_id}")
 async def collection(collection_id: str):
     items = await collection_api.get_collection_items(collection_id)
+    # Keep only movies
+    items = [item for item in items if item["type"] == "movie"]
     items = [await convert_item(item) for item in items]
+    # Keep only items with IMDb ID
+    items = [item for item in items if item["imdb_id"]]
     return items
 
 
