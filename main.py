@@ -1,7 +1,9 @@
+import asyncio
 import logging
 import traceback
 from fastapi import FastAPI
 import fastapi
+from bootstrap import bootstrap
 
 from collection import CollectionApi
 from imdb import get_imdb_api
@@ -14,6 +16,8 @@ logging.basicConfig(
 app = FastAPI()
 collection_api = CollectionApi()
 imdb_api = get_imdb_api()
+
+asyncio.create_task(bootstrap(collection_api, imdb_api))
 
 
 @app.exception_handler(500)

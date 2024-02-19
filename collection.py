@@ -22,13 +22,17 @@ class CollectionApi:
         self.client.close()
         self.cache.close()
 
+
+    async def get_collection_info(self, collection_id: str):
+        return await get_json(self.client, f"/{collection_id}")
+
     async def get_collection_items(self, collection_id: str):
         items = self.cache.get(collection_id)
         if items is not None:
             return items
 
         logging.info(f"Fetching collection items for {collection_id} ...")
-        collection_info = await get_json(self.client, f"/{collection_id}")
+        collection_info = await self.get_collection_info(collection_id)
         total = collection_info["total"]
         items = []
         start = 0
