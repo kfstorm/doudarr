@@ -27,6 +27,11 @@ docker run -d --name doudarr -p 8000:8000 -v /path/to/cache:/app/cache kfstorm/d
 * 因为豆瓣的反爬策略，Doudarr限制了请求频率。首次启动Doudarr时，API请求较慢，需耐心等待。
 * 记得将容器内的`/app/cache`目录映射到宿主机上，以免后续容器重建或升级时丢失缓存数据。
 
+## 项目特色
+
+* 支持任意豆瓣电影榜单。
+* 使用IMDb ID作为电影的唯一标识，不会因为电影名字相近而导致添加错误的电影。
+
 ## FAQ
 
 * 如何获取榜单ID？
