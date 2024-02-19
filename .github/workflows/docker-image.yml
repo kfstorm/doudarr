@@ -23,5 +23,4 @@ jobs:
         # Push is a shorthand for --output=type=registry
         push: true
         # List of tags
-        tags: kfstorm/douban-to-radarr-list
-              
+        tags: kfstorm/doudarr
