@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/setup-python@v5
+      with:
+        cache: 'pip' # caching pip dependencies
+        cache-dependency-path: 'requirements-lint.txt'
     - name: Check lint
       run: pip install -r requirements-lint.txt && ./scripts/lint.sh
     - name: Docker Login
@@ -26,3 +30,6 @@ jobs:
         push: true
         # List of tags
         tags: kfstorm/doudarr
+        # Cache layers for faster builds
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
