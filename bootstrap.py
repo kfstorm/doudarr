@@ -16,19 +16,26 @@ COMMON_COLLECTIONS = [
 
 async def bootstrap(collection_api: CollectionApi, imdb_api: ImdbApi):
     """
-    This function is called at the start of the application to regularly send HTTP requests
-    and cache the results. This can help saving time on incoming requests.
+    This function is called at the start of the application to regularly send
+    HTTP requests and cache the results.
+
+    This can help saving time on incoming requests.
     """
     while True:
         logging.info("Bootstrapping...")
         all_collections = deque(COMMON_COLLECTIONS)
         visited_collections = set()
-        while all_collections and len(visited_collections) < app_config.bootstrap_collections_max:
+        while (
+            all_collections
+            and len(visited_collections) < app_config.bootstrap_collections_max
+        ):
             collection_id = all_collections.popleft()
             visited_collections.add(collection_id)
 
             try:
-                collection_info = await collection_api.get_collection_info(collection_id)
+                collection_info = await collection_api.get_collection_info(
+                    collection_id
+                )
                 for related_collection in collection_info["related_charts"]["items"]:
                     related_collection_id = related_collection["id"]
                     if related_collection_id not in visited_collections:

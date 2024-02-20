@@ -22,7 +22,6 @@ class CollectionApi:
         self.client.close()
         self.cache.close()
 
-
     async def get_collection_info(self, collection_id: str):
         return await get_json(self.client, f"/{collection_id}")
 
