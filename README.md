@@ -35,6 +35,12 @@ Doudarr是一个将豆瓣榜单/片单/豆列（以下统称`豆瓣列表`）转
 * 因为豆瓣的反爬策略，Doudarr限制了请求频率。首次启动Doudarr时，API请求较慢，需耐心等待。
 * 记得将容器内的`/app/cache`目录映射到宿主机上，以免后续容器重建或升级时丢失缓存数据。
 
+## 公共服务地址
+
+为了方便大家使用，可以使用公共的Doudarr服务：[https://doudarr.azurewebsites.net](https://doudarr.azurewebsites.net)。公共服务的IMDb ID缓存可能更全面，可以更快加载出豆瓣列表中的电影。
+
+请注意，这是一个公共服务，不保证稳定性和可用性。如果有条件，建议自行部署Doudarr。
+
 ## 项目特色
 
 * 支持任意豆瓣列表。
