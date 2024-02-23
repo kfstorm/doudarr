@@ -8,7 +8,7 @@ from utils import get_http_client_args, get_response
 from diskcache import Cache
 from config import ImdbApiType, app_config
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Dict
 
 
 class ImdbApi(ABC):
@@ -18,11 +18,14 @@ class ImdbApi(ABC):
     def __exit__(self, exc_type, exc_value, traceback):
         self.cache.close()
 
+    def get_cache(self) -> Cache:
+        return self.cache
+
     @abstractmethod
-    async def fetch_imdb_id(self, douban_id: str, douban_item: Any):
+    async def fetch_imdb_id(self, douban_id: str, douban_item: Any) -> str:
         pass
 
-    async def get_imdb_id(self, douban_id: str, douban_item: Any):
+    async def get_imdb_id(self, douban_id: str, douban_item: Any) -> str:
         imdb_id = self.cache.get(douban_id, default="not_cached")
         if imdb_id != "not_cached":
             return imdb_id
@@ -42,14 +45,14 @@ class DoubanHtmlImdbApi(ImdbApi):
         del self.client.headers["user-agent"]
         self.imdb_id_pattern = re.compile(r"IMDb:.*?(\btt\d+\b)")
 
-    def _get_http_client_args(self):
+    def _get_http_client_args(self) -> Dict[str, Any]:
         return {}
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.client.close()
         super().__exit__(exc_type, exc_value, traceback)
 
-    async def fetch_imdb_id(self, douban_id: str, douban_item: Any):
+    async def fetch_imdb_id(self, douban_id: str, douban_item: Any) -> str:
         title = douban_item["title"]
 
         await asyncio.sleep(random.uniform(0.0, app_config.imdb_request_delay_max))

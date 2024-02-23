@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import traceback
+from typing import Any, List
 from fastapi import FastAPI
 import fastapi
 from bootstrap import bootstrap
@@ -28,8 +29,20 @@ async def internal_exception_handler(request: fastapi.Request, exc: Exception):
     return fastapi.responses.PlainTextResponse(status_code=500, content=content)
 
 
+@app.get("/")
+@app.get("/stats")
+async def stats() -> Any:
+    return {
+        "cache_size": {
+            "collection": len(collection_api.get_cache()),
+            "doulist": len(doulist_api.get_cache()),
+            "imdb": len(imdb_api.get_cache()),
+        }
+    }
+
+
 @app.get("/collection/{id}")
-async def collection(id: str):
+async def collection(id: str) -> List[Any]:
     items = await collection_api.get_items(id)
     # Keep only movies
     items = [item for item in items if item["type"] == "movie"]
@@ -40,7 +53,7 @@ async def collection(id: str):
 
 
 @app.get("/doulist/{id}")
-async def doulist(id: str):
+async def doulist(id: str) -> List[Any]:
     items = await doulist_api.get_items(id)
     # Keep only movies
     items = [item for item in items if item["type"] == "movie"]
@@ -50,7 +63,7 @@ async def doulist(id: str):
     return items
 
 
-async def convert_item(item):
+async def convert_item(item: Any) -> Any:
     douban_id = get_douban_id(item)
     imdb_id = await imdb_api.get_imdb_id(douban_id, item)
     return {

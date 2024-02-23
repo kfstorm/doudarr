@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import random
+from typing import Any, List
 import httpx
 from utils import get_http_client_args, get_json
 from diskcache import Cache
@@ -23,10 +24,13 @@ class BaseApi:
         self.client.close()
         self.cache.close()
 
-    async def get_info(self, id: str):
+    def get_cache(self) -> Cache:
+        return self.cache
+
+    async def get_info(self, id: str) -> Any:
         return await get_json(self.client, f"/{id}")
 
-    async def get_items(self, id: str):
+    async def get_items(self, id: str) -> List[Any]:
         items = self.cache.get(id)
         if items is not None:
             return items
