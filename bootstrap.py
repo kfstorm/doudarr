@@ -1,54 +1,65 @@
 import asyncio
 import logging
-from collections import deque
-from collection import CollectionApi
+import random
+from typing import List, Tuple
+from urllib.parse import urlparse
+from lists import CollectionApi, DoulistApi, ListsApi
 from imdb import ImdbApi
 from config import app_config
 from utils import get_douban_id
 
 
-COMMON_COLLECTIONS = [
-    "movie_top250",  # 豆瓣电影 Top250
-    "movie_weekly_best",  # 一周口碑电影榜
-    "movie_real_time_hotest",  # 实时热门电影
-    "subject_real_time_hotest",  # 实时热门书影音
-]
-
-
-async def bootstrap(collection_api: CollectionApi, imdb_api: ImdbApi):
+async def bootstrap(
+    collection_api: CollectionApi, doulist_api: DoulistApi, imdb_api: ImdbApi
+):
     """
     This function is called at the start of the application to regularly send
     HTTP requests and cache the results.
 
     This can help saving time on incoming requests.
     """
+
+    list_apis = {
+        "collection": collection_api,
+        "doulist": doulist_api,
+    }
+
     while True:
         logging.info("Bootstrapping...")
-        all_collections = deque(COMMON_COLLECTIONS)
-        visited_collections = set()
-        while (
-            all_collections
-            and len(visited_collections) < app_config.bootstrap_collections_max
-        ):
-            collection_id = all_collections.popleft()
-            visited_collections.add(collection_id)
-
+        lists = await get_lists_to_bootstrap()
+        for type, id in lists:
             try:
-                info = await collection_api.get_info(collection_id)
-                for related_collection in info["related_charts"]["items"]:
-                    related_collection_id = related_collection["id"]
-                    if related_collection_id not in visited_collections:
-                        all_collections.append(related_collection_id)
-
-                items = await collection_api.get_items(collection_id)
+                list_api = list_apis[type]
+                items = await list_api.get_items(id)
                 # Keep only movies
                 items = [item for item in items if item["type"] == "movie"]
                 for item in items:
                     douban_id = get_douban_id(item)
                     await imdb_api.get_imdb_id(douban_id, item)
             except Exception as e:
-                logging.error(f"Failed to fetch collection {collection_id}: {e}")
+                logging.error(f"Failed to fetch {type} {id}: {e}")
 
-            await asyncio.sleep(app_config.bootstrap_collection_interval)
+            await asyncio.sleep(app_config.bootstrap_list_interval)
         logging.info("Bootstrapping done.")
         await asyncio.sleep(app_config.bootstrap_interval)
+
+
+async def get_lists_to_bootstrap() -> List[Tuple[str, str]]:
+    lists_api = ListsApi()
+    lists = set()
+    async for item in lists_api.iter_lists():
+        parsed_url = urlparse(item["sharing_url"])
+        url_parts = [_ for _ in parsed_url.path.split("/") if _][-2:]
+        list_type = url_parts[0]
+        list_id = url_parts[1]
+        if list_type == "subject_collection":
+            lists.add(("collection", list_id))
+        elif list_type == "doulist":
+            lists.add(("doulist", list_id))
+        else:
+            logging.warning(f"Unknown list type: {list_type}")
+        if len(lists) >= app_config.bootstrap_lists_max * 10:
+            break
+
+    lists = random.sample(list(lists), app_config.bootstrap_lists_max)
+    return lists

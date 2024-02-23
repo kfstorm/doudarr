@@ -6,7 +6,7 @@ from fastapi import FastAPI
 import fastapi
 from bootstrap import bootstrap
 
-from collection import CollectionApi, DoulistApi
+from lists import CollectionApi, DoulistApi
 from imdb import get_imdb_api
 from utils import get_douban_id
 
@@ -20,7 +20,7 @@ collection_api = CollectionApi()
 doulist_api = DoulistApi()
 imdb_api = get_imdb_api()
 
-asyncio.create_task(bootstrap(collection_api, imdb_api))
+asyncio.create_task(bootstrap(collection_api, doulist_api, imdb_api))
 
 
 @app.exception_handler(500)
