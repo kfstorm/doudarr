@@ -8,7 +8,7 @@ class ImdbApiType(str, Enum):
 
 class AppConfig(BaseSettings):
     cache_base_dir: str = "cache"
-    collection_request_delay_max: float = 1
+    douban_api_request_delay_max: float = 1
     collection_cache_ttl: float = 3600
     imdb_request_delay_max: float = 30
     imdb_api_type: ImdbApiType = ImdbApiType.DOUBAN_HTML

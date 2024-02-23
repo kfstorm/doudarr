@@ -19,15 +19,14 @@ class ImdbApi(ABC):
         self.cache.close()
 
     @abstractmethod
-    async def fetch_imdb_id(self, douban_item: Any):
+    async def fetch_imdb_id(self, douban_id: str, douban_item: Any):
         pass
 
-    async def get_imdb_id(self, douban_item: Any):
-        douban_id = douban_item["id"]
+    async def get_imdb_id(self, douban_id: str, douban_item: Any):
         imdb_id = self.cache.get(douban_id, default="not_cached")
         if imdb_id != "not_cached":
             return imdb_id
-        imdb_id = await self.fetch_imdb_id(douban_item)
+        imdb_id = await self.fetch_imdb_id(douban_id, douban_item)
         if not imdb_id:
             expire = app_config.imdb_cache_ttl_id_not_found
         else:
@@ -50,9 +49,8 @@ class DoubanHtmlImdbApi(ImdbApi):
         self.client.close()
         super().__exit__(exc_type, exc_value, traceback)
 
-    async def fetch_imdb_id(self, douban_item: Any):
+    async def fetch_imdb_id(self, douban_id: str, douban_item: Any):
         title = douban_item["title"]
-        douban_id = douban_item["id"]
 
         await asyncio.sleep(random.uniform(0.0, app_config.imdb_request_delay_max))
 

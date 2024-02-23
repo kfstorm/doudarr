@@ -4,6 +4,7 @@ from collections import deque
 from collection import CollectionApi
 from imdb import ImdbApi
 from config import app_config
+from utils import get_douban_id
 
 
 COMMON_COLLECTIONS = [
@@ -33,19 +34,18 @@ async def bootstrap(collection_api: CollectionApi, imdb_api: ImdbApi):
             visited_collections.add(collection_id)
 
             try:
-                collection_info = await collection_api.get_collection_info(
-                    collection_id
-                )
-                for related_collection in collection_info["related_charts"]["items"]:
+                info = await collection_api.get_info(collection_id)
+                for related_collection in info["related_charts"]["items"]:
                     related_collection_id = related_collection["id"]
                     if related_collection_id not in visited_collections:
                         all_collections.append(related_collection_id)
 
-                items = await collection_api.get_collection_items(collection_id)
+                items = await collection_api.get_items(collection_id)
                 # Keep only movies
                 items = [item for item in items if item["type"] == "movie"]
                 for item in items:
-                    await imdb_api.get_imdb_id(item)
+                    douban_id = get_douban_id(item)
+                    await imdb_api.get_imdb_id(douban_id, item)
             except Exception as e:
                 logging.error(f"Failed to fetch collection {collection_id}: {e}")
 
