@@ -14,7 +14,7 @@ class Throttler:
             if now < self.next_call_time:
                 raise Exception(
                     "Rate limited. Need to wait at least "
-                    + (self.next_call_time - now)
+                    + str(self.next_call_time - now)
                     + " seconds before the next call."
                 )
 
@@ -28,7 +28,7 @@ class Throttler:
             )
             raise Exception(
                 "Rate limited. Need to wait at least "
-                + app_config.douban_rate_limit_delay_seconds
+                + str(app_config.douban_rate_limit_delay_seconds)
                 + " seconds before the next call."
             )
 
