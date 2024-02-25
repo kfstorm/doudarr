@@ -8,15 +8,16 @@ class ImdbApiType(str, Enum):
 
 class AppConfig(BaseSettings):
     cache_base_dir: str = "cache"
-    douban_api_request_delay_max: float = 1
-    list_cache_ttl: float = 3600
-    imdb_request_delay_max: float = 30
+    douban_api_request_delay_max_seconds: float = 1
+    list_cache_ttl_seconds: float = 3600 * 24
+    imdb_request_delay_max_seconds: float = 30
     imdb_api_type: ImdbApiType = ImdbApiType.DOUBAN_HTML
-    imdb_cache_ttl_id_not_found: float = 3600
+    imdb_cache_ttl_id_not_found_seconds: float = 3600
     proxy_address: str | None = None
-    bootstrap_interval: float = 3600 * 24
-    bootstrap_list_interval: float = 30
+    bootstrap_interval_seconds: float = 3600 * 24
+    bootstrap_list_interval_seconds: float = 30
     bootstrap_lists_max: int = 100
+    douban_rate_limit_delay_seconds: float = 3600
 
 
 app_config = AppConfig(_env_prefix="DOUDARR_")

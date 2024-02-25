@@ -31,7 +31,7 @@ class ImdbApi(ABC):
             return imdb_id
         imdb_id = await self.fetch_imdb_id(douban_id, douban_item)
         if not imdb_id:
-            expire = app_config.imdb_cache_ttl_id_not_found
+            expire = app_config.imdb_cache_ttl_id_not_found_seconds
         else:
             expire = None
         self.cache.set(douban_id, imdb_id, expire=expire)
@@ -55,7 +55,9 @@ class DoubanHtmlImdbApi(ImdbApi):
     async def fetch_imdb_id(self, douban_id: str, douban_item: Any) -> str:
         title = douban_item["title"]
 
-        await asyncio.sleep(random.uniform(0.0, app_config.imdb_request_delay_max))
+        await asyncio.sleep(
+            random.uniform(0.0, app_config.imdb_request_delay_max_seconds)
+        )
 
         logging.info(f"Fetching IMDb ID for {title} (douban ID: {douban_id})...")
         response = await get_response(

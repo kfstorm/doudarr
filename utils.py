@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import httpx
 import logging
 from config import app_config
+from throttler import throttler
 
 
 async def get_response(client: httpx.AsyncClient, url: str):
@@ -21,15 +22,18 @@ async def get_json(client: httpx.AsyncClient, url: str):
 
 
 def get_http_client_args():
+    args = {
+        **throttler.get_client_args(),
+    }
     if app_config.proxy_address:
-        return {
+        args = {
+            **args,
             "proxies": {
                 "http://": app_config.proxy_address,
                 "https://": app_config.proxy_address,
             },
         }
-    else:
-        return {}
+    return args
 
 
 def get_douban_id(item):

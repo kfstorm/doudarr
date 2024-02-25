@@ -26,22 +26,25 @@ async def bootstrap(
 
     while True:
         logging.info("Bootstrapping...")
-        lists = await get_lists_to_bootstrap()
-        for type, id in lists:
-            try:
-                list_api = list_apis[type]
-                items = await list_api.get_items(id)
-                # Keep only movies
-                items = [item for item in items if item["type"] == "movie"]
-                for item in items:
-                    douban_id = get_douban_id(item)
-                    await imdb_api.get_imdb_id(douban_id, item)
-            except Exception as e:
-                logging.error(f"Failed to fetch {type} {id}: {e}")
+        try:
+            lists = await get_lists_to_bootstrap()
+            for type, id in lists:
+                try:
+                    list_api = list_apis[type]
+                    items = await list_api.get_items(id)
+                    # Keep only movies
+                    items = [item for item in items if item["type"] == "movie"]
+                    for item in items:
+                        douban_id = get_douban_id(item)
+                        await imdb_api.get_imdb_id(douban_id, item)
+                except Exception:
+                    logging.exception(f"Failed to fetch {type} {id}.")
 
-            await asyncio.sleep(app_config.bootstrap_list_interval)
-        logging.info("Bootstrapping done.")
-        await asyncio.sleep(app_config.bootstrap_interval)
+                await asyncio.sleep(app_config.bootstrap_list_interval_seconds)
+            logging.info("Bootstrapping done.")
+        except Exception:
+            logging.exception("Failed to bootstrap.")
+        await asyncio.sleep(app_config.bootstrap_interval_seconds)
 
 
 async def get_lists_to_bootstrap() -> List[Tuple[str, str]]:

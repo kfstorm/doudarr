@@ -31,7 +31,9 @@ class BaseApi:
         return await get_json(self.client, f"/{id}")
 
     async def _read_one_page(self, id: str, start: int, count: int) -> Any:
-        await asyncio.sleep(random.uniform(0, app_config.douban_api_request_delay_max))
+        await asyncio.sleep(
+            random.uniform(0, app_config.douban_api_request_delay_max_seconds)
+        )
         return await get_json(
             self.client,
             f"/{id}/items?start={start}&count={count}",
@@ -56,7 +58,7 @@ class BaseApi:
         ]
         logging.info(f"Fetched {len(items)} items for {id}.")
 
-        self.cache.set(id, items, expire=app_config.list_cache_ttl)
+        self.cache.set(id, items, expire=app_config.list_cache_ttl_seconds)
         return items
 
 
@@ -88,7 +90,9 @@ class ListsApi:
         self.client.close()
 
     async def _read_one_page(self, start: int, count: int) -> Any:
-        await asyncio.sleep(random.uniform(0, app_config.douban_api_request_delay_max))
+        await asyncio.sleep(
+            random.uniform(0, app_config.douban_api_request_delay_max_seconds)
+        )
         return await get_json(
             self.client,
             f"/skynet/new_playlists?apikey={self.api_key}&subject_type=movie&start={start}&count={count}",

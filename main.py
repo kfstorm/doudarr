@@ -8,6 +8,7 @@ from bootstrap import bootstrap
 
 from lists import CollectionApi, DoulistApi
 from imdb import get_imdb_api
+from throttler import throttler
 from utils import get_douban_id
 
 
@@ -37,7 +38,8 @@ async def stats() -> Any:
             "collection": len(collection_api.get_cache()),
             "doulist": len(doulist_api.get_cache()),
             "imdb": len(imdb_api.get_cache()),
-        }
+        },
+        "throttler_info": throttler.get_info(),
     }
 
 
