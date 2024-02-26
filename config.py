@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import List
 from pydantic_settings import BaseSettings
 
 
@@ -18,6 +19,9 @@ class AppConfig(BaseSettings):
     bootstrap_list_interval_seconds: float = 30
     bootstrap_lists_max: int = 100
     douban_rate_limit_delay_seconds: float = 3600
+    sync_imdb_cache_interval_seconds: float = 3600
+    sync_imdb_cache_to: List[str] = []
+    apikey: str | None = None
 
 
 app_config = AppConfig(_env_prefix="DOUDARR_")
