@@ -54,6 +54,7 @@ async def sync(apikey: str, items: List[Any]) -> Any:
     cache = imdb_api.get_cache()
     now = time.time()
     count = 0
+    new_count = 0
     for item in items:
         key = item["key"]
         value = item["value"]
@@ -71,7 +72,9 @@ async def sync(apikey: str, items: List[Any]) -> Any:
             expire = expire_time - now if expire_time else None
             cache.set(key, value, expire=expire)
             count += 1
-    logging.info(f"Synced {count} IMDb items from remote.")
+            if old_value == "not_found":
+                new_count += 1
+    logging.info(f"Synced {count} IMDb items from remote. New items: {new_count}.")
 
 
 @app.get("/collection/{id}")
