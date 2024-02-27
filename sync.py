@@ -11,25 +11,26 @@ async def sync(imdb_api: ImdbApi):
     if to_urls:
         while True:
             logging.info("Syncing IMDb cache...")
-            try:
-                items = []
-                cache = imdb_api.get_cache()
-                for key in cache:
-                    value, expire_time = cache.get(key, expire_time=True)
-                    if value:
-                        items.append(
-                            {"key": key, "value": value, "expire_time": expire_time}
-                        )
-                for url in to_urls:
-                    try:
-                        logging.info(f"Syncing {len(items)} IMDb items to {url}...")
-                        response = await httpx.AsyncClient().post(url, json=items)
-                        response.raise_for_status()
-                    except Exception:
-                        logging.exception(f"Failed to sync IMDb cache to {url}.")
-                logging.info("Synced IMDb cache.")
-            except Exception:
-                logging.exception("Failed to sync IMDb cache.")
+            async with httpx.AsyncClient(timeout=60) as client:
+                try:
+                    items = []
+                    cache = imdb_api.get_cache()
+                    for key in cache:
+                        value, expire_time = cache.get(key, expire_time=True)
+                        if value:
+                            items.append(
+                                {"key": key, "value": value, "expire_time": expire_time}
+                            )
+                    for url in to_urls:
+                        try:
+                            logging.info(f"Syncing {len(items)} IMDb items to {url}...")
+                            response = await client.post(url, json=items)
+                            response.raise_for_status()
+                        except Exception:
+                            logging.exception(f"Failed to sync IMDb cache to {url}.")
+                    logging.info("Synced IMDb cache.")
+                except Exception:
+                    logging.exception("Failed to sync IMDb cache.")
             await asyncio.sleep(app_config.sync_imdb_cache_interval_seconds)
     else:
         logging.info(
