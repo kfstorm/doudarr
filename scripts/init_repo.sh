@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-cd $(git rev-parse --show-toplevel)
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 rm -f .git/hooks/pre-commit
 ln -s ../../scripts/hooks/pre-commit .git/hooks/pre-commit

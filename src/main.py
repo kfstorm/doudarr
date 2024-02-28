@@ -5,14 +5,14 @@ import traceback
 from typing import Any, List
 from fastapi import FastAPI, HTTPException
 import fastapi
-from bootstrap import bootstrap
-from sync import sync
+from .bootstrap import bootstrap
+from .sync import sync
 
-from lists import BaseApi, CollectionApi, DoulistApi
-from imdb import get_imdb_api
-from throttler import throttler
-from utils import get_douban_id
-from config import app_config
+from .lists import BaseApi, CollectionApi, DoulistApi
+from .imdb import get_imdb_api
+from .throttler import throttler
+from .utils import get_douban_id
+from .config import app_config
 
 
 logging.basicConfig(

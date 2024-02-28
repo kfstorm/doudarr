@@ -3,10 +3,10 @@ import logging
 import random
 from typing import List, Tuple
 from urllib.parse import urlparse
-from lists import CollectionApi, DoulistApi, ListsApi
-from imdb import ImdbApi
-from config import app_config
-from utils import get_douban_id
+from .lists import CollectionApi, DoulistApi, ListsApi
+from .imdb import ImdbApi
+from .config import app_config
+from .utils import get_douban_id
 
 
 async def bootstrap(

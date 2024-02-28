@@ -1,9 +1,9 @@
 import asyncio
 import logging
 
-from config import app_config
-from imdb import ImdbApi
-from utils import new_http_client
+from .config import app_config
+from .imdb import ImdbApi
+from .utils import new_http_client
 
 
 async def sync(imdb_api: ImdbApi):

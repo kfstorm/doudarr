@@ -3,9 +3,9 @@ import logging
 import os
 import random
 from typing import Any, AsyncIterator, List
-from utils import get_json, new_http_client, read_pages
+from .utils import get_json, new_http_client, read_pages
 from diskcache import Cache
-from config import app_config
+from .config import app_config
 
 
 class BaseApi:

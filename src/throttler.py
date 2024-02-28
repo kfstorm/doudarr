@@ -2,7 +2,7 @@ from collections import defaultdict
 import time
 import httpx
 
-from config import app_config
+from .config import app_config
 
 
 class Throttler:

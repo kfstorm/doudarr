@@ -2,8 +2,8 @@ from typing import Any, AsyncIterator
 from urllib.parse import urlparse
 import httpx
 import logging
-from config import app_config
-from throttler import throttler
+from .config import app_config
+from .throttler import throttler
 
 
 async def get_response(client: httpx.AsyncClient, url: str):

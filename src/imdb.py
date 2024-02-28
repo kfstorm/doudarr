@@ -3,9 +3,9 @@ import logging
 import os
 import random
 import re
-from utils import get_response, new_http_client
+from .utils import get_response, new_http_client
 from diskcache import Cache
-from config import ImdbApiType, app_config
+from .config import app_config
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
@@ -72,8 +72,4 @@ class DoubanHtmlImdbApi(ImdbApi):
 
 
 def get_imdb_api() -> ImdbApi:
-    logging.info(f"Using IMDb API type: {app_config.imdb_api_type}")
-    if app_config.imdb_api_type == ImdbApiType.DOUBAN_HTML:
-        return DoubanHtmlImdbApi()
-    else:
-        raise ValueError(f"Unsupported IMDb API type: {app_config.imdb_api_type}")
+    return DoubanHtmlImdbApi()
