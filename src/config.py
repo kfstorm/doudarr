@@ -19,7 +19,7 @@ class AppConfig(BaseSettings):
         description="抓取IMDb信息时的最大延迟（秒）。两次请求之间的延迟是随机的，这里配置的是最大值。",
     )
     imdb_cache_ttl_id_not_found_seconds: float = Field(
-        3600,
+        3600 * 24,
         description="IMDb ID未找到时的缓存TTL（秒）。"
         + "部分豆瓣条目没有IMDb ID（可能是暂时的），没有找到时会缓存一段时间，避免重复查询。TTL到期后会再次查询。",
     )

@@ -1,5 +1,4 @@
 import os
-import subprocess
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "src"))
@@ -43,11 +42,6 @@ if __name__ == "__main__":
     else:
         if check:
             print("README is not up to date.")
-            # call git diff
-            subprocess.run(
-                ["git", "--no-pager", "diff", "--no-ext-diff", "--", readme_path],
-                check=True,
-            )
             sys.exit(1)
         else:
             with open(readme_path, "w") as f:

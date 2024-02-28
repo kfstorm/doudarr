@@ -33,7 +33,7 @@ Doudarr服务支持以环境变量的方式配置服务参数。参数列表如�
 | `DOUDARR_DOUBAN_API_REQUEST_DELAY_MAX_SECONDS` | `1` | 请求豆瓣API时的最大延迟（秒）。两次请求之间的延迟是随机的，这里配置的是最大值。 |
 | `DOUDARR_LIST_CACHE_TTL_SECONDS` | `86400` | 列表缓存的TTL（秒）。列表缓存会在一段时间后过期，过期后会重新抓取。如果豆瓣列表的条目有更新，重新抓取后会拿到最新的条目。 |
 | `DOUDARR_IMDB_REQUEST_DELAY_MAX_SECONDS` | `30` | 抓取IMDb信息时的最大延迟（秒）。两次请求之间的延迟是随机的，这里配置的是最大值。 |
-| `DOUDARR_IMDB_CACHE_TTL_ID_NOT_FOUND_SECONDS` | `3600` | IMDb ID未找到时的缓存TTL（秒）。部分豆瓣条目没有IMDb ID（可能是暂时的），没有找到时会缓存一段时间，避免重复查询。TTL到期后会再次查询。 |
+| `DOUDARR_IMDB_CACHE_TTL_ID_NOT_FOUND_SECONDS` | `86400` | IMDb ID未找到时的缓存TTL（秒）。部分豆瓣条目没有IMDb ID（可能是暂时的），没有找到时会缓存一段时间，避免重复查询。TTL到期后会再次查询。 |
 | `DOUDARR_PROXY_ADDRESS` | 无 | 代理地址，所有HTTP请求将通过代理转发。 |
 | `DOUDARR_BOOTSTRAP_INTERVAL_SECONDS` | `86400` | 缓存预热的时间间隔（秒）。缓存预热会在后台定期执行，用于抓取IMDb信息并缓存，加快后续查询速度。设置间隔可以避免短时间内抓取太多信息，导致访问受限。 |
 | `DOUDARR_BOOTSTRAP_LIST_INTERVAL_SECONDS` | `30` | 缓存预热时抓取两个列表之间的时间间隔（秒）。设置间隔可以避免短时间内抓取太多列表，导致访问受限。 |
