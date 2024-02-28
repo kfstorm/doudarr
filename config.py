@@ -22,6 +22,7 @@ class AppConfig(BaseSettings):
     sync_imdb_cache_interval_seconds: float = 3600
     sync_imdb_cache_to: List[str] = []
     apikey: str | None = None
+    cookie_douban_com_dbcl2: str | None = None
 
 
 app_config = AppConfig(_env_prefix="DOUDARR_")

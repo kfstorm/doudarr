@@ -3,8 +3,7 @@ import logging
 import os
 import random
 import re
-import httpx
-from utils import get_http_client_args, get_response
+from utils import get_response, new_http_client
 from diskcache import Cache
 from config import ImdbApiType, app_config
 from abc import ABC, abstractmethod
@@ -41,8 +40,7 @@ class ImdbApi(ABC):
 class DoubanHtmlImdbApi(ImdbApi):
     def __init__(self):
         super().__init__()
-        self.client = httpx.AsyncClient(**get_http_client_args())
-        del self.client.headers["user-agent"]
+        self.client = new_http_client()
         self.imdb_id_pattern = re.compile(r"IMDb:.*?(\btt\d+\b)")
 
     def _get_http_client_args(self) -> Dict[str, Any]:

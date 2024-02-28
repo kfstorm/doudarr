@@ -32,12 +32,10 @@ class Throttler:
                 + " seconds before the next call."
             )
 
-    def get_client_args(self):
+    def get_event_hooks(self):
         return {
-            "event_hooks": {
-                "request": [self._on_request],
-                "response": [self._on_response],
-            },
+            "request": [self._on_request],
+            "response": [self._on_response],
         }
 
     def get_info(self):

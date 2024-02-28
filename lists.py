@@ -3,19 +3,15 @@ import logging
 import os
 import random
 from typing import Any, AsyncIterator, List
-import httpx
-from utils import get_http_client_args, get_json, read_pages
+from utils import get_json, new_http_client, read_pages
 from diskcache import Cache
 from config import app_config
 
 
 class BaseApi:
     def __init__(self, sub_path: str, cache_name: str, items_key: str):
-        self.client = httpx.AsyncClient(
-            **get_http_client_args(),
-            base_url=f"https://m.douban.com/rexxar/api/v2/{sub_path}",
-        )
-        del self.client.headers["user-agent"]
+        self.client = new_http_client()
+        self.client.base_url = f"https://m.douban.com/rexxar/api/v2/{sub_path}"
         self.client.headers["Referer"] = f"https://m.douban.com/{sub_path}"
         self.cache = Cache(os.path.join(app_config.cache_base_dir, cache_name))
         self.items_key = items_key
@@ -76,10 +72,8 @@ class DoulistApi(BaseApi):
 # https://github.com/DIYgod/RSSHub/blob/master/lib/v2/douban/other/recommended.js
 class ListsApi:
     def __init__(self):
-        self.client = httpx.AsyncClient(
-            **get_http_client_args(),
-            base_url="https://frodo.douban.com/api/v2",
-        )
+        self.client = new_http_client()
+        self.client.base_url = "https://frodo.douban.com/api/v2"
         self.client.headers["User-Agent"] = "MicroMessenger/"
         self.client.headers[
             "Referer"

@@ -21,10 +21,8 @@ async def get_json(client: httpx.AsyncClient, url: str):
     return response.json()
 
 
-def get_http_client_args():
-    args = {
-        **throttler.get_client_args(),
-    }
+def _get_extra_http_client_args():
+    args = {}
     if app_config.proxy_address:
         args = {
             **args,
@@ -33,7 +31,27 @@ def get_http_client_args():
                 "https://": app_config.proxy_address,
             },
         }
+    if app_config.cookie_douban_com_dbcl2:
+        cookies = httpx.Cookies()
+        cookies.set("dbcl2", app_config.cookie_douban_com_dbcl2, domain=".douban.com")
+        args = {
+            **args,
+            "cookies": cookies,
+        }
     return args
+
+
+def new_http_client() -> httpx.AsyncClient:
+    client = httpx.AsyncClient(
+        timeout=60,
+        event_hooks=throttler.get_event_hooks(),
+        **_get_extra_http_client_args(),
+    )
+    client.headers["User-Agent"] = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        + " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.3"
+    )
+    return client
 
 
 def get_douban_id(item):

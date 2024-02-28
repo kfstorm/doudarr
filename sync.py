@@ -1,9 +1,9 @@
 import asyncio
 import logging
 
-import httpx
 from config import app_config
 from imdb import ImdbApi
+from utils import new_http_client
 
 
 async def sync(imdb_api: ImdbApi):
@@ -11,7 +11,7 @@ async def sync(imdb_api: ImdbApi):
     if to_urls:
         while True:
             logging.info("Syncing IMDb cache...")
-            async with httpx.AsyncClient(timeout=60) as client:
+            async with new_http_client() as client:
                 try:
                     items = []
                     cache = imdb_api.get_cache()
