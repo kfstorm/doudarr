@@ -4,10 +4,10 @@ RUN mkdir /app
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY src/* .
+COPY src/* /app/doudarr/
 
 VOLUME "/app/cache"
 
 EXPOSE 8000
 
-ENTRYPOINT [ "uvicorn", "main:app", "--host", "0.0.0.0"]
+ENTRYPOINT [ "uvicorn", "doudarr.main:app", "--host", "0.0.0.0"]
