@@ -8,7 +8,7 @@ import fastapi
 from bootstrap import bootstrap
 from sync import sync
 
-from lists import CollectionApi, DoulistApi
+from lists import BaseApi, CollectionApi, DoulistApi
 from imdb import get_imdb_api
 from throttler import throttler
 from utils import get_douban_id
@@ -77,26 +77,33 @@ async def sync(apikey: str, items: List[Any]) -> Any:
     logging.info(f"Synced {count} IMDb items from remote. New items: {new_count}.")
 
 
-@app.get("/collection/{id}")
-async def collection(id: str) -> List[Any]:
-    items = await collection_api.get_items(id)
+async def list(list_api: BaseApi, id: str, min_rating: float) -> List[Any]:
+    items = await list_api.get_items(id)
     # Keep only movies
     items = [item for item in items if item["type"] == "movie"]
+    # Keep only items with a minimum score
+    if min_rating:
+        items = [
+            item
+            for item in items
+            if "rating" in item
+            and "value" in item["rating"]
+            and item["rating"]["value"] >= min_rating
+        ]
     items = [await convert_item(item) for item in items]
     # Keep only items with IMDb ID
     items = [item for item in items if item["imdb_id"]]
     return items
+
+
+@app.get("/collection/{id}")
+async def collection(id: str, min_rating: float = None) -> List[Any]:
+    return await list(collection_api, id, min_rating)
 
 
 @app.get("/doulist/{id}")
-async def doulist(id: str) -> List[Any]:
-    items = await doulist_api.get_items(id)
-    # Keep only movies
-    items = [item for item in items if item["type"] == "movie"]
-    items = [await convert_item(item) for item in items]
-    # Keep only items with IMDb ID
-    items = [item for item in items if item["imdb_id"]]
-    return items
+async def doulist(id: str, min_rating: float = None) -> List[Any]:
+    return await list(doulist_api, id, min_rating)
 
 
 async def convert_item(item: Any) -> Any:

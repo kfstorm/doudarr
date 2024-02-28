@@ -30,6 +30,14 @@ Doudarr是一个将豆瓣榜单/片单/豆列（以下统称`豆瓣列表`）转
 | `https://m.douban.com/subject_collection/<豆瓣列表ID>` | `http://<Doudarr服务地址>/collection/<豆瓣列表ID>` | `http://localhost:8000/collection/movie_weekly_best` |
 | `https://www.douban.com/doulist/<豆瓣列表ID>/` | `http://<Doudarr服务地址>/doulist/<豆瓣列表ID>` | `http://localhost:8000/doulist/43556565` |
 
+## URL参数
+
+可以通过额外的query参数来控制返回的内容。
+
+| 参数 | 说明 | 示例 |
+| --- | --- | --- |
+| `min_rating` | 最低评分要求。只有不低于指定评分的电影才会被返回。 | `http://localhost:8000/collection/movie_weekly_best?min_rating=8` |
+
 ## 注意事项
 
 * 因为豆瓣的反爬策略，Doudarr限制了请求频率。首次启动Doudarr时，API请求较慢，需耐心等待。
@@ -58,5 +66,5 @@ Doudarr是一个将豆瓣榜单/片单/豆列（以下统称`豆瓣列表`）转
 
 下面是我想到的可能会做的功能，但不一定会实现。欢迎提出新的功能需求。
 
-- [ ] 支持在列表上增加筛选逻辑，如最低评分要求。
-- [ ] 支持以导演、演员为ID创建列表。
+* [x] 支持在列表上增加筛选逻辑，如最低评分要求。
+* [ ] 支持以导演、演员为ID创建列表。
