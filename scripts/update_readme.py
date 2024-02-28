@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "src"))
 
-from config import app_config  # noqa: E402
+from config import ENV_PREFIX, app_config  # noqa: E402
 
 
 def generate_doc():
@@ -11,7 +11,7 @@ def generate_doc():
     lines.append("| 环境变量 | 默认值 | 说明 |")
     lines.append("| --- | --- | --- |")
     for name, info in app_config.model_json_schema()["properties"].items():
-        env_var = f"DOUDARR_{name.upper()}"
+        env_var = f"{ENV_PREFIX}{name.upper()}"
         default = info["default"]
         if default is None:
             default = "无"

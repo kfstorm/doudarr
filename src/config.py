@@ -69,4 +69,5 @@ class AppConfig(BaseSettings):
     )
 
 
-app_config = AppConfig(_env_prefix="DOUDARR_")
+ENV_PREFIX = "DOUDARR_"
+app_config = AppConfig(_env_prefix=ENV_PREFIX)
