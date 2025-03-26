@@ -2,7 +2,7 @@ import asyncio
 import logging
 import random
 from typing import List, Tuple
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 from .lists import CollectionApi, DoulistApi, ListsApi
 from .imdb import ImdbApi
 from .config import app_config
@@ -55,6 +55,13 @@ async def get_lists_to_bootstrap() -> List[Tuple[str, str]]:
         url_parts = [_ for _ in parsed_url.path.split("/") if _][-2:]
         list_type = url_parts[0]
         list_id = url_parts[1]
+        if list_type == "doubanapp" and list_id == "dispatch":
+            query_params = parse_qs(parsed_url.query)
+            uri = query_params.get("uri", [None])[0]
+            if uri:
+                url_parts = [_ for _ in uri.split("/") if _][-2:]
+                list_type = url_parts[0]
+            list_id = url_parts[1]
         if list_type == "subject_collection":
             lists.add(("collection", list_id))
         elif list_type == "doulist":
