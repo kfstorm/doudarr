@@ -24,7 +24,8 @@ collection_api = CollectionApi()
 doulist_api = DoulistApi()
 imdb_api = get_imdb_api()
 
-asyncio.create_task(bootstrap(collection_api, doulist_api, imdb_api))
+if app_config.enable_bootstrap:
+    asyncio.create_task(bootstrap(collection_api, doulist_api, imdb_api))
 asyncio.create_task(sync(imdb_api))
 
 
