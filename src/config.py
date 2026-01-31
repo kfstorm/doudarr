@@ -70,16 +70,16 @@ class AppConfig(BaseSettings):
     )
     douban_idatabase_url: str | None = Field(
         None,
-        description="douban-idatabase API的基础URL（例如：http://localhost:8000）。"
+        description="豆瓣数据库 API的基础URL（例如：http://localhost:8000）。"
         + "如果配置了此参数，IMDb ID查询将使用此API，而不是抓取豆瓣网页。",
     )
     douban_idatabase_api_key: str | None = Field(
         None,
-        description="douban-idatabase API的密钥（可选）。如果服务器允许匿名访问，可以留空。",
+        description="豆瓣数据库 API的密钥（可选）。如果服务器允许匿名访问，可以留空。",
     )
     douban_idatabase_timeout_seconds: float = Field(
         10,
-        description="调用douban-idatabase API的超时时间（秒）。",
+        description="调用豆瓣数据库 API的超时时间（秒）。",
     )
 
 
