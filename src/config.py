@@ -5,9 +5,7 @@ from pydantic_settings import BaseSettings
 
 
 class AppConfig(BaseSettings):
-    cache_base_dir: str = Field(
-        "cache", description="缓存路径。默认值为相对路径，也可以填写绝对路径。"
-    )
+    cache_base_dir: str = Field("cache", description="缓存路径。默认值为相对路径，也可以填写绝对路径。")
     douban_api_request_delay_max_seconds: float = Field(
         1,
         description="请求豆瓣API时的最大延迟（秒）。两次请求之间的延迟是随机的，这里配置的是最大值。",
@@ -25,9 +23,7 @@ class AppConfig(BaseSettings):
         description="IMDb ID未找到时的缓存TTL（秒）。"
         + "部分豆瓣条目没有IMDb ID（可能是暂时的），没有找到时会缓存一段时间，避免重复查询。TTL到期后会再次查询。",
     )
-    proxy_address: str | None = Field(
-        None, description="代理地址，所有HTTP请求将通过代理转发。"
-    )
+    proxy_address: str | None = Field(None, description="代理地址，所有HTTP请求将通过代理转发。")
     enable_bootstrap: bool = Field(True, description="是否启用缓存预热。")
     bootstrap_interval_seconds: float = Field(
         3600 * 24,

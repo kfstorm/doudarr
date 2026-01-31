@@ -74,7 +74,7 @@ Doudarr服务支持以环境变量的方式配置服务参数。参数列表如�
 
 ## 公共服务地址
 
-为了方便大家使用，可以使用公共的Doudarr服务：[https://doudarr.azurewebsites.net](https://doudarr.azurewebsites.net)。公共服务的IMDb ID缓存可能更全面，可以更快加载出豆瓣列表中的电影。
+为了方便大家使用，可以使用公共的Doudarr服务：[https://doudarr.kfstorm.com](https://doudarr.kfstorm.com)。公共服务的IMDb ID缓存可能更全面，可以更快加载出豆瓣列表中的电影。
 
 请注意，这是一个公共服务，不保证稳定性和可用性。如果有条件，建议自行部署Doudarr。
 
