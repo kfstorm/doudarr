@@ -44,9 +44,9 @@ Doudarr服务支持以环境变量的方式配置服务参数。参数列表如�
 | `DOUDARR_SYNC_IMDB_CACHE_INTERVAL_SECONDS` | `3600` | 同步IMDb缓存到其他Doudarr实例的时间间隔（秒）。同步IMDb缓存会定期将缓存同步到其他Doudarr实例上，以便多个Doudarr实例之间共享IMDb缓存。 |
 | `DOUDARR_SYNC_IMDB_CACHE_TO` | `[]` | 同步IMDb缓存到其他Doudarr实例的URL列表。同步IMDb缓存会定期将缓存同步到其他Doudarr实例上，以便多个Doudarr实例之间共享IMDb缓存。该参数可以包括多个URL，用于同步到多个Doudarr实例。参数示例：`["http://doudarr-another-1:8000/sync?apikey=another-apikey-1", "http://doudarr-another-2:8000/sync?apikey=another-apikey-2"]`。注意这里的apikey需要填写对应实例的apikey，而不是自己的。该参数的值较为复杂，配置环境变量时注意转义。 |
 | `DOUDARR_COOKIE_DOUBAN_COM_DBCL2` | 无 | 豆瓣网站的cookie中key为`dbcl2` cookie的值。如果想让Doudarr以登录用户的身份去访问豆瓣的接口，请配置该参数。 |
-| `DOUDARR_DOUBAN_IDATABASE_URL` | 无 | douban-idatabase API的基础URL（例如：http://localhost:8000）。如果配置了此参数，IMDb ID查询将使用此API，而不是抓取豆瓣网页。 |
-| `DOUDARR_DOUBAN_IDATABASE_API_KEY` | 无 | douban-idatabase API的密钥（可选）。如果服务器允许匿名访问，可以留空。 |
-| `DOUDARR_DOUBAN_IDATABASE_TIMEOUT_SECONDS` | `10` | 调用douban-idatabase API的超时时间（秒）。 |
+| `DOUDARR_DOUBAN_IDATABASE_URL` | 无 | 豆瓣数据库 API的基础URL（例如：http://localhost:8000）。如果配置了此参数，IMDb ID查询将使用此API，而不是抓取豆瓣网页。 |
+| `DOUDARR_DOUBAN_IDATABASE_API_KEY` | 无 | 豆瓣数据库 API的密钥（可选）。如果服务器允许匿名访问，可以留空。 |
+| `DOUDARR_DOUBAN_IDATABASE_TIMEOUT_SECONDS` | `10` | 调用豆瓣数据库 API的超时时间（秒）。 |
 
 <!-- DOUDARR_SERVICE_PARAMETERS_END -->
 
@@ -77,6 +77,14 @@ Doudarr服务支持以环境变量的方式配置服务参数。参数列表如�
 为了方便大家使用，可以使用公共的Doudarr服务：[https://doudarr.kfstorm.com](https://doudarr.kfstorm.com)。公共服务的IMDb ID缓存可能更全面，可以更快加载出豆瓣列表中的电影。
 
 请注意，这是一个公共服务，不保证稳定性和可用性。如果有条件，建议自行部署Doudarr。
+
+### 豆瓣数据库 API
+
+如果你不想让 Doudarr 抓取豆瓣网页（容易触发反爬），可以使用 `DOUDARR_DOUBAN_IDATABASE_URL` 参数配置豆瓣数据库 API。
+
+你可以使用公共的免费 API：`https://douban-idatabase.kfstorm.com`（不保证在线率），或者自行部署兼容该接口的服务。
+
+该 API 的接口规范请参考：[自建豆瓣数据库 API 要求](https://github.com/kfstorm/douban-rating-arr#%E8%87%AA%E5%BB%BA%E8%B1%86%E7%93%A3%E6%95%B0%E6%8D%AE%E5%BA%93-api-%E8%A6%81%E6%B1%82)。
 
 ## 项目特色
 
