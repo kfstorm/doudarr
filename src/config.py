@@ -5,7 +5,9 @@ from pydantic_settings import BaseSettings
 
 
 class AppConfig(BaseSettings):
-    cache_base_dir: str = Field("cache", description="缓存路径。默认值为相对路径，也可以填写绝对路径。")
+    cache_base_dir: str = Field(
+        "cache", description="缓存路径。默认值为相对路径，也可以填写绝对路径。"
+    )
     douban_api_request_delay_max_seconds: float = Field(
         1,
         description="请求豆瓣API时的最大延迟（秒）。两次请求之间的延迟是随机的，这里配置的是最大值。",
@@ -23,7 +25,9 @@ class AppConfig(BaseSettings):
         description="IMDb ID未找到时的缓存TTL（秒）。"
         + "部分豆瓣条目没有IMDb ID（可能是暂时的），没有找到时会缓存一段时间，避免重复查询。TTL到期后会再次查询。",
     )
-    proxy_address: str | None = Field(None, description="代理地址，所有HTTP请求将通过代理转发。")
+    proxy_address: str | None = Field(
+        None, description="代理地址，所有HTTP请求将通过代理转发。"
+    )
     bootstrap_interval_seconds: float = Field(
         3600 * 24,
         description="缓存预热的时间间隔（秒）。"
@@ -66,6 +70,19 @@ class AppConfig(BaseSettings):
         None,
         description="豆瓣网站的cookie中key为`dbcl2` cookie的值。"
         + "如果想让Doudarr以登录用户的身份去访问豆瓣的接口，请配置该参数。",
+    )
+    douban_idatabase_url: str | None = Field(
+        None,
+        description="douban-idatabase API的基础URL（例如：http://localhost:8000）。"
+        + "如果配置了此参数，IMDb ID查询将使用此API，而不是抓取豆瓣网页。",
+    )
+    douban_idatabase_api_key: str | None = Field(
+        None,
+        description="douban-idatabase API的密钥（可选）。如果服务器允许匿名访问，可以留空。",
+    )
+    douban_idatabase_timeout_seconds: float = Field(
+        10,
+        description="调用douban-idatabase API的超时时间（秒）。",
     )
 
 

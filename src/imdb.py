@@ -3,6 +3,7 @@ import logging
 import os
 import random
 import re
+import httpx
 from .utils import get_response, new_http_client
 from diskcache import Cache
 from .config import app_config
@@ -63,7 +64,7 @@ class DoubanHtmlImdbApi(ImdbApi):
         )
         match = self.imdb_id_pattern.search(response.text)
         if not match:
-            logging.warn(f"IMDb ID not found for {title} (douban ID: {douban_id}).")
+            logging.warning(f"IMDb ID not found for {title} (douban ID: {douban_id}).")
             return None
         imdb_id = match.group(1)
         logging.info(f"IMDb ID for {title} (douban ID: {douban_id}) is {imdb_id}.")
@@ -71,5 +72,67 @@ class DoubanHtmlImdbApi(ImdbApi):
         return imdb_id
 
 
+class DoubanIDatabaseImdbApi(ImdbApi):
+    def __init__(self):
+        super().__init__()
+        self.client = new_http_client()
+        self.client.base_url = app_config.douban_idatabase_url
+        self.client.timeout = httpx.Timeout(app_config.douban_idatabase_timeout_seconds)
+        if app_config.douban_idatabase_api_key:
+            self.client.headers["X-API-Key"] = app_config.douban_idatabase_api_key
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.client.close()
+        super().__exit__(exc_type, exc_value, traceback)
+
+    async def fetch_imdb_id(self, douban_id: str, douban_item: Any) -> str:
+        title = douban_item["title"]
+
+        logging.info(
+            f"Fetching IMDb ID from douban-idatabase for {title} "
+            + f"(douban ID: {douban_id})..."
+        )
+
+        try:
+            response = await get_response(
+                self.client, f"/api/item?douban_id={douban_id}"
+            )
+            items = response.json()
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                logging.warning(
+                    f"Item not found in douban-idatabase for {title} "
+                    + f"(douban ID: {douban_id})."
+                )
+                return None
+            raise
+
+        if not items or len(items) == 0:
+            logging.warning(
+                f"Empty response from douban-idatabase for {title} "
+                + f"(douban ID: {douban_id})."
+            )
+            return None
+
+        item = items[0]
+        imdb_id = item.get("imdb_id")
+
+        if not imdb_id:
+            logging.warning(
+                f"IMDb ID not available in douban-idatabase for {title} "
+                + f"(douban ID: {douban_id})."
+            )
+            return None
+
+        logging.info(
+            f"IMDb ID for {title} (douban ID: {douban_id}) is {imdb_id} "
+            + f"(from douban-idatabase)."
+        )
+        return imdb_id
+
+
 def get_imdb_api() -> ImdbApi:
-    return DoubanHtmlImdbApi()
+    if app_config.douban_idatabase_url:
+        return DoubanIDatabaseImdbApi()
+    else:
+        return DoubanHtmlImdbApi()
