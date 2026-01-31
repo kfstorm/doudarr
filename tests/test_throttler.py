@@ -1,10 +1,8 @@
 import pytest
-import sys
 import time
 from unittest.mock import Mock, patch
 
 # Import from src package
-import src.throttler as throttler_module
 from src.throttler import Throttler
 
 

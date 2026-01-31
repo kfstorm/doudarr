@@ -1,4 +1,3 @@
-import pytest
 import os
 from unittest.mock import patch
 from src.config import AppConfig, ENV_PREFIX
@@ -123,12 +122,12 @@ class TestAppConfig:
         schema = AppConfig.model_json_schema()
 
         for field_name, field_info in schema["properties"].items():
-            assert "description" in field_info, (
-                f"Field {field_name} missing description"
-            )
-            assert len(field_info["description"]) > 0, (
-                f"Field {field_name} has empty description"
-            )
+            assert (
+                "description" in field_info
+            ), f"Field {field_name} missing description"
+            assert (
+                len(field_info["description"]) > 0
+            ), f"Field {field_name} has empty description"
 
     def test_douban_idatabase_field_descriptions_in_chinese(self):
         """Test that douban-idatabase field descriptions are in Chinese"""

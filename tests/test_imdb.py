@@ -1,6 +1,6 @@
 import pytest
 import httpx
-from unittest.mock import Mock, patch, AsyncMock
+from unittest.mock import Mock, patch
 
 # Import from src package
 from src.imdb import (

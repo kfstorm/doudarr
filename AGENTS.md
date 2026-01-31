@@ -6,28 +6,42 @@ This file provides guidance for AI coding agents working with this repository.
 
 Doudarr is a FastAPI-based web service that converts Douban movie lists (collections, doulists) into Radarr-compatible lists. It fetches IMDb IDs for Douban movies to enable automatic monitoring and downloading via Radarr.
 
+## Package Management
+
+This project uses **uv** for dependency management. Key files:
+- `pyproject.toml`: Project metadata and dependencies
+- `uv.lock`: Locked dependency versions (auto-generated)
+- Dependencies are managed via `uv add`, not manual editing of requirements.txt
+
 ## Development Commands
 
 ```bash
 # Setup and initialization
 ./scripts/init_repo.sh          # Initialize repository and setup environment
+uv sync                          # Install all dependencies (including dev)
 
 # Code quality
-./scripts/lint.sh               # Run flake8 linting
+./scripts/lint.sh               # Run linting and auto-fix formatting issues
+./scripts/lint.sh --check       # Check only (no auto-fix) - used in CI/CD
 
 # Testing
 ./scripts/test.sh               # Run pytest test suite
-pytest                          # Run tests directly with pytest
-pytest tests/test_config.py     # Run specific test file
-pytest -v                       # Run tests with verbose output
-pytest -k "test_throttler"      # Run tests matching pattern
+uv run pytest                   # Run tests directly with pytest
+uv run pytest tests/test_config.py  # Run specific test file
+uv run pytest -v                # Run tests with verbose output
+uv run pytest -k "test_throttler"   # Run tests matching pattern
 
 # Running the application
 ./scripts/local_run.sh          # Start FastAPI development server locally
-uvicorn src.main:app --reload   # Alternative way to start server
+uv run uvicorn src.main:app --reload   # Alternative way to start server
 
 # Documentation updates
-python scripts/update_readme.py # Regenerate README with updated config descriptions
+uv run python scripts/update_readme.py # Regenerate README with updated config descriptions
+
+# Dependency management
+uv add <package>                # Add runtime dependency
+uv add --dev <package>          # Add dev dependency
+uv sync                         # Sync dependencies from lock file
 ```
 
 ## Architecture Overview

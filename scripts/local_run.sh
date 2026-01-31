@@ -4,4 +4,4 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-uvicorn src.main:app --reload
+uv run uvicorn src.main:app --reload

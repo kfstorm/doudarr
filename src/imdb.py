@@ -126,7 +126,7 @@ class DoubanIDatabaseImdbApi(ImdbApi):
 
         logging.info(
             f"IMDb ID for {title} (douban ID: {douban_id}) is {imdb_id} "
-            + f"(from douban-idatabase)."
+            + "(from douban-idatabase)."
         )
         return imdb_id
 
