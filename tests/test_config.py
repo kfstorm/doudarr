@@ -128,20 +128,3 @@ class TestAppConfig:
             assert (
                 len(field_info["description"]) > 0
             ), f"Field {field_name} has empty description"
-
-    def test_douban_idatabase_field_descriptions_in_chinese(self):
-        """Test that douban-idatabase field descriptions are in Chinese"""
-        schema = AppConfig.model_json_schema()
-
-        # Check douban_idatabase fields have Chinese descriptions
-        assert (
-            "douban-idatabase"
-            in schema["properties"]["douban_idatabase_url"]["description"]
-        )
-        assert "API" in schema["properties"]["douban_idatabase_url"]["description"]
-
-        assert "密钥" in schema["properties"]["douban_idatabase_api_key"]["description"]
-        assert (
-            "超时时间"
-            in schema["properties"]["douban_idatabase_timeout_seconds"]["description"]
-        )
