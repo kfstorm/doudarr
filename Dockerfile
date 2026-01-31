@@ -1,19 +1,23 @@
 FROM python:3.12-alpine
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+RUN --mount=type=cache,target=/root/.cache/pip pip install uv
+
+# Copy dependency files first for better caching
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies before copying source code
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --frozen --no-dev
+
+# Create UV cache directory with proper permissions for non-root users
+RUN mkdir -p /.cache/uv && chmod 777 /.cache/uv
+
+# Copy application code and scripts
+COPY src/ /app/doudarr/
+COPY run.sh /run.sh
 
 # Set working directory
 WORKDIR /app
-
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
-
-# Install dependencies
-RUN uv sync --frozen --no-dev
-
-# Copy application code
-COPY src/ /app/doudarr/
 
 # Create cache volume
 VOLUME "/app/cache"
@@ -22,4 +26,4 @@ VOLUME "/app/cache"
 EXPOSE 8000
 
 # Run application
-ENTRYPOINT ["uv", "run", "uvicorn", "doudarr.main:app", "--host", "0.0.0.0"]
+ENTRYPOINT ["/run.sh"]
