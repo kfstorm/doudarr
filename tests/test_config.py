@@ -14,7 +14,7 @@ class TestAppConfig:
         assert config.douban_api_request_delay_max_seconds == 1
         assert config.list_cache_ttl_seconds == 86400
         assert config.imdb_request_delay_max_seconds == 30
-        assert config.imdb_cache_ttl_id_not_found_seconds == 86400
+        assert config.imdb_cache_ttl_id_not_found_seconds == 2592000
         assert config.proxy_address is None
         assert config.bootstrap_interval_seconds == 86400
         assert config.bootstrap_list_interval_seconds == 30
