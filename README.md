@@ -84,7 +84,7 @@ Doudarr服务支持以环境变量的方式配置服务参数。参数列表如�
 
 你可以使用公共的免费 API：`https://douban-idatabase.kfstorm.com`（不保证在线率），或者自行部署兼容该接口的服务。
 
-该 API 的接口规范请参考：[自建豆瓣数据库 API 要求](https://github.com/kfstorm/douban-rating-arr#%E8%87%AA%E5%BB%BA%E8%B1%86%E7%93%A3%E6%95%B0%E6%8D%AE%E5%BA%93-api-%E8%A6%81%E6%B1%82)。
+该 API 来自 [douban-idatabase](https://github.com/kfstorm/douban-idatabase) 项目，接口规范请参考：[API Usage](https://github.com/kfstorm/douban-idatabase#api-usage)。
 
 ## 项目特色
 

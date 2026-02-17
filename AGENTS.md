@@ -108,6 +108,8 @@ docker run -d --name doudarr -p 8000:8000 -v /path/to/cache:/app/cache kfstorm/d
 
 ## Integration with douban-idatabase
 
+Doudarr can integrate with [douban-idatabase](https://github.com/kfstorm/douban-idatabase) to fetch IMDb IDs via API instead of scraping.
+
 When `DOUDARR_DOUBAN_IDATABASE_URL` is configured, Doudarr calls the douban-idatabase API instead of scraping Douban HTML:
 
 - **Endpoint**: `GET /api/item?douban_id={douban_id}`
